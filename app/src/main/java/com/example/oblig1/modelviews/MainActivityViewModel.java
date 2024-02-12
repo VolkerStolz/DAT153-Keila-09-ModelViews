@@ -2,6 +2,7 @@ package com.example.oblig1.modelviews;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Random;
@@ -9,9 +10,9 @@ import java.util.Random;
 public class MainActivityViewModel extends ViewModel {
 
     private String TAG = this.getClass().getSimpleName();
-    private String myRandomNumber;
+    private LiveData<String> myRandomNumber;
 
-    public String getNumber() {
+    public LiveData<String> getNumber() {
         Log.i(TAG, "Get number");
         if (myRandomNumber == null) {
             createNumber();
@@ -20,9 +21,10 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     private void createNumber() {
-        Log.i(TAG, "Create new number");
+        Log.i(TAG, "Created new number");
         Random random = new Random();
-        myRandomNumber = "Number: " + (random.nextInt(10 - 1) + 1);
+        myRandomNumber = new LiveData<String>("Number: " + (random.nextInt(10 - 1) + 1)) {
+        };
     }
 
     @Override

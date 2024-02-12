@@ -2,6 +2,7 @@ package com.example.oblig1.modelviews;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -34,8 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
         TextView mTextView = findViewById(R.id.tvNumber);
         MainActivityViewModel model = new ViewModelProvider(this).get((MainActivityViewModel.class));
-        String myRandomNumber = model.getNumber();
-        mTextView.setText(myRandomNumber);
+        final Observer<String> randomObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String newRandom) {
+                mTextView.setText(newRandom);
+            }
+        };
+        model.getNumber().observe(this,randomObserver);
 
         Log.i(TAG, "Random Number Set");
     }
