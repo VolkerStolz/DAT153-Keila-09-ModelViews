@@ -21,42 +21,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle(getResources().getString(R.string.app_name) + " LiveModel");
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        MainActivityViewModel model = new ViewModelProvider(this).get((MainActivityViewModel.class));
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Counting...", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null
+                        ).show();
+                Log.i(TAG, "Changing number");
+                model.getNumber();
             }
         });
 
         TextView mTextView = findViewById(R.id.tvNumber);
-        MainActivityViewModel model = new ViewModelProvider(this).get((MainActivityViewModel.class));
-        final Observer<String> randomObserver = new Observer<String>() {
+        final Observer<Integer> randomObserver = new Observer<Integer>() {
             @Override
-            public void onChanged(String newRandom) {
-                mTextView.setText(newRandom);
+            public void onChanged(Integer newRandom) {
+                mTextView.setText("Value (dynamic): " + newRandom);
             }
         };
-        model.getNumber().observe(this,randomObserver);
+        model.getStaticNumber().observe(this,randomObserver);
+        model.getDynamicNumber().observe(this,randomObserver);
 
-        Log.i(TAG, "Random Number Set");
+        Log.i(TAG, "Random number observers set");
     }
     @Override
     public void onStop() {
         super.onStop();
-
         Log.i(TAG, "Stopping Activity");
     }
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
-
         Log.i(TAG, "Destroying Activity");
     }
 }
